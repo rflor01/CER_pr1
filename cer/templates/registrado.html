@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Página con Botones</title>
+    <style>
+        /* Estilos para el botón de registro */
+        .boton-registro {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0074d9;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .boton-registro:hover {
+            background-color: #0056a7;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bienvenido {{ session.username }}</h1>
+    <div id="sse-data"></div>
+    <script>
+        const eventSource = new EventSource('/sse');
+
+        eventSource.onmessage = function(event) {
+            const sseData = document.getElementById('sse-data');
+            sseData.innerHTML = `Notificación SSE: ${event.data}`;
+        };
+
+        eventSource.onerror = function(error) {
+            console.error('Error de SSE: ', error);
+        };
+    </script>
+
+    <!-- Botón "MEDIA LOCAL" -->
+    <form action="" method="POST">
+        <input type="hidden" name="media" value="local">
+        <input type="submit" value="MEDIA LOCAL">
+    </form>
+    {% if session.media_local_solicitada %}
+        El valor del oro según la base de datos local es {{ valor_media_local }}
+    {% endif %}
+
+    <!-- Botón "MEDIA EXTERNA" -->
+    <form action="" method="POST">
+        <input type="hidden" name="media" value="external">
+        <input type="submit" value="MEDIA EXTERNA">
+    </form>
+    {% if session.media_nube_solicitada %}
+        El valor del oro según la base de datos en la nube es {{ valor_media_nube }}
+    {% endif %}
+    <form action="" method="POST">
+        <input type="hidden" name="media" value="logout">
+        <input type="submit" value="LOGOUT">
+    </form>
+
+    <form action="" method="POST">
+        <label for="umbral">Obtener 5 últimos valores superiores al umbral:</label>
+        <input type="text" id="umbral" name="umbral" required>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    {% if session.umbral5solicitado %}
+        Los últimos 5 valores que superan al umbral ingresado son: {{ session.umbraless }}
+    {% endif %}
+
+
+
+    <form action="" method="POST">
+        <label for="limit">Avisar cuando el valor del oro supere el umbral:</label>
+        <input type="text" id="limit" name="limit" required>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    {% if session.nonumero %}
+        El umbral registrado debe ser un digito
+    {% endif %}
+    <form action="" method="POST">
+        <input type="hidden" name="media" value="graficas">
+        <input type="submit" value="GRAFICAS EXTERNAS">
+    </form>
+
+    <h1>Número de consultas realizadas a la base de datos local {{ clicks_local }}</h1>
+    <h1>Número de consultas realizadas a la base de datos externa {{ clicks_external }}</h1>
+
+    {% if session.grafica_solicitada == 1 %}
+        <iframe border="0" width="100%" height="480" src="https://beebotte.com/embed/dash/adca9a60-6a78-11ee-a7c0-99ff9311e4cf?shareid=shareid_vQM24OrM4aFNwEN9"></iframe>
+    {% endif %}
+</body>
+</html>

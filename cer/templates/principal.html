@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Página con Botones</title>
+    <style>
+        /* Estilos para el botón de registro */
+        .boton-registro {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0074d9;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .boton-registro:hover {
+            background-color: #0056a7;
+        }
+    </style>
+</head>
+<body>
+    {% if session.intento_erroneo %}
+        El correo ingresado no coincide con la contraseña actual
+    {% endif %}
+    <!-- Botón "MEDIA LOCAL" -->
+    <form action="" method="POST">
+        <input type="hidden" name="media" value="local">
+        <input type="submit" value="MEDIA LOCAL">
+    </form>
+    {% if session.intento_media_local %}
+        Debes estar registrado para acceder a la base de datos local
+    {% endif %}
+
+    <!-- Botón "MEDIA EXTERNA" -->
+    <form action="" method="POST">
+        <input type="hidden" name="media" value="external">
+        <input type="submit" value="MEDIA EXTERNA">
+    </form>
+    {% if session.intento_media_nube %}
+        Debes estar registrado para acceder a la base de datos externa
+    {% endif %}
+    <!-- Botón de Registro -->
+    <form action="" method="POST">
+        <input type="hidden" name="media" value="registro">
+        <input type="submit" value="REGISTRO">
+    </form>
+
+
+
+    <h1>Precio actual del oro: {{precio_oro}}</h1>
+
+</body>
+</html>
+
